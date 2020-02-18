@@ -62,11 +62,15 @@ void gpib_wr(int gpadr, lpchar, int i);
 
 /* Here are some variables for dealing with remote focusing: */
 
+/** These are redefined in wiro.h
+
 #define SLOWF 0x00
 #define FASTF 0x01
 #define HOLDF 0x00
 #define INF   0x02
 #define OUTF  0x04
+
+**/
 
 unsigned short
    gray2bin( unsigned short gval);

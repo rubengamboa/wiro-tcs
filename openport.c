@@ -6,8 +6,12 @@
 */
 
 #define _POSIX_SOURCE
+#define _XOPEN_SOURCE 500
+#define _DEFAULT_SOURCE
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include <termios.h>
 #include <sys/types.h>
 #include <fcntl.h>

@@ -10,6 +10,8 @@
 /*              Robert R. Howell    May 13, 1991                      */
 /*                                  Aug  1, 1991  Fixed round to 60's bug */
 #include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 char    hms[81];               /* hms string to return.                 */
 

@@ -15,6 +15,8 @@
 
 #include "parameters.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include <math.h>
 #include <string.h>
 #include "GPIBports.h"
@@ -172,12 +174,12 @@ char  PlotTitle   [100];
 char  PlotSubtitle[100];
 
 /* testing configuration variables */
-int  DiagnosticMode 	= NULL;
+int  DiagnosticMode 	= 0;
 char *HA_AXIS  		= "hour angle";
 char *DEC_AXIS		= "declination";
 char *CurrentAxis;
 
-int   SlewModeFlag = NULL;	/* set if slew mode entered */
+int   SlewModeFlag = 0;	/* set if slew mode entered */
 
 /* ================================================================= 
    Diagnostic thread function and user interface functions
@@ -209,7 +211,7 @@ void do_diagnostic(void)
    else if (Command == MENUposition)	position_menu();
    else if (Command == MENUha_axis)		CurrentAxis = HA_AXIS;
    else if (Command == MENUdec_axis)	CurrentAxis = DEC_AXIS;
-   else if (Command == MENUtrack)		passive_track(NULL);
+   else if (Command == MENUtrack)		passive_track(0);
    else if (Command == MENUpassive)		passive_track(TRUE);
    }
   while (Command != MENUquit);
@@ -321,7 +323,7 @@ void passive_track (int CollectData)
     display_menu(PASSIVE_DISPLAYS);
     }
   else
-    DiagnosticMode = NULL;
+    DiagnosticMode = 0;
   printf("The telescope is now in normal tracking mode!\n");
 }
 
@@ -615,7 +617,7 @@ void run_test (int Mode)
 
   if (Mode == POSITION_MODE) tinfo->motion_type = NO_MOTION;
 
-  SlewModeFlag = NULL;
+  SlewModeFlag = 0;
   TickNumber     = 0;
   DiagnosticMode = Mode;
   while (DiagnosticMode != IDLE_MODE)
@@ -839,7 +841,7 @@ void get_parameter(parameter *Par)
     do
      {
      printf("%s (%d) :", Par->Int.Prompt, Par->Int.Val);
-     gets(Response);
+     fgets(Response, sizeof(Response), stdin);
 
      Nscanned = sscanf(Response, "%d", &IntVal);
      if (Nscanned == 1)
@@ -860,7 +862,7 @@ void get_parameter(parameter *Par)
     do
      {
      printf("%s (%ld) :", Par->Long.Prompt, Par->Long.Val);
-     gets(Response);
+     fgets(Response, sizeof(Response), stdin);
 
      Nscanned = sscanf(Response, "%ld", &LongVal);
      if (Nscanned == 1)
@@ -881,7 +883,7 @@ void get_parameter(parameter *Par)
     do
      {
      printf("%s (%f) :", Par->Float.Prompt, Par->Float.Val);
-     gets(Response);
+     fgets(Response, sizeof(Response), stdin);
 
      Nscanned = sscanf(Response, "%f", &FloatVal);
      if (Nscanned == 1)
@@ -902,7 +904,7 @@ void get_parameter(parameter *Par)
     do
      {
      printf("%s (%lf) :", Par->Double.Prompt, Par->Double.Val);
-     gets(Response);
+     fgets(Response, sizeof(Response), stdin);
 
      Nscanned = sscanf(Response, "%lf", &DoubleVal);
      if (Nscanned == 1)
@@ -1127,7 +1129,7 @@ void plot_vactual_vdesired(void)
   double DesiredV, PrevDesiredV;
   double DelPosition;   /* estimated change in position in degrees */
   double MeasureTime;	/* in seconds */
-  int    Done = NULL, EndOfTest = NULL;
+  int    Done = 0, EndOfTest = 0;
 
   get_parameter((parameter*) &TicksToSettle);
 
