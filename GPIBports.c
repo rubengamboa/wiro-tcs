@@ -3,12 +3,16 @@
 
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <termios.h> 
 #include <sys/types.h>
 #include <fcntl.h>
 #include <string.h>
 #include "GPIBports.h"
+
+int openport( char *name, speed_t speed );
+
 
 #define TERMINATOR '\n'
 int fdGPIB=0;  /* This is the number of the serial port for GPIB */
@@ -37,11 +41,11 @@ int readstring(int fd, lpchar str, int number)
 	while(number > 0) {
 		read(fd,str+i,1);  /* Read the bloody character */
 		if (str[i] == TERMINATOR) break;
-		str[i+1]=NULL;
+		str[i+1]=0;
 		i++;			   /* I could put this elsewhere - str+i++ !? */
 		number--;
 	}
-	str[i-1] = NULL;   		/* Terminate the string for good luck */
+	str[i-1] = 0;   		/* Terminate the string for good luck */
 	return(0);				/* Always succeed - for NOW! */
 }
 
@@ -57,7 +61,7 @@ int multiread(int fd, char * str, int number)
 		i++;			   /* I could put this elsewhere - str+i++ !? */
 		number--;
 	}
-	str[i] = NULL;   		/* Terminate the string for good luck */
+	str[i] = 0;   		/* Terminate the string for good luck */
 	return(0);				/* Always succeed - for NOW! */
 }
 	
@@ -200,7 +204,7 @@ void gpib_wr(int gpadr, lpchar bits, int n)
 
 	for(i=0; i<n; i++) {
 		sprintf(str,"%02X",(int) bits[i]);
-		str[2]=NULL;
+		str[2]=0;
 /* 		printf(">>%s<<",str);	 */
 		easywrite(fdGPIB,str);
 	}

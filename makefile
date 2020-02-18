@@ -30,7 +30,7 @@ backup:
 	gzip ../newtrack.tar
 
 clean:
-	-rm *.o makecorefile \
+	-rm -f *.o makecorefile \
 	stop s g index turn+ turn- turn-dec turn+dec turn-ra turn+ra quit \
 	dome \
 	fixed zenith service \

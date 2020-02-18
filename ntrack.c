@@ -89,13 +89,19 @@ Weger    Feb. 18 2002   Set MAX_DOME_ERROR from 4 to 2.
 
 /***** includes **********************************************************/
 
+#define _XOPEN_SOURCE 500
+#define _DEFAULT_SOURCE
+
 #include "wirotypes.h"   /* Does wiro typedefs and system dependencies */
 #include <stdlib.h>      /* Standard libraries */
 #include <stdio.h>
 #include <strings.h>
+#include <string.h>
+#include <unistd.h>
 #include <signal.h>
 #include <sys/wait.h>
 #include <fcntl.h>
+#include <time.h>
 #include <sys/types.h>
 #include <sys/time.h>
 #include <math.h>
@@ -118,6 +124,9 @@ void set_zero_velocity     (void);
 void simulate_telescope    (void);
 short encode_ha_rate	   (double Velocity);
 short encode_dec_rate	   (double Velocity);
+void gpibport_setup( void );
+
+void tscreen_add( void );
 
 void init           (void);  /* The master initialization routine */
 void read_ut        (void);  /* Read in the universal time, set variables */
@@ -133,6 +142,7 @@ void do_rates       (void);  /* Calculate rates for motors given  errors */
 void do_turns       (void);  
 		/* Watch to see if we need to increment the turns counter */
 void do_screens(void);       /* This function displays the tracking screens */
+void do_encoders(void);
 void run_dome       (void);  /* Check dome encoder, move if necessary */
 void tinfo_init     (void);  /* Read in initial state */
 void trackloop      (void);  
@@ -144,6 +154,7 @@ void write_hifi     (void);    /* Write hifi on hifi D80 channel 1 */
 void log_entry      (char *comment);  /* Adds a comment into the log */
                 /* which is located at /home/observer/wiro/logging/log */
 
+int init_port(int address, char *name, char *conf, char *def);
 
 /* Test and hardware enable flags - default states*/
 int paddle_present  =1;  /* Set to 1 to enable paddle input. */
@@ -166,7 +177,7 @@ int nosigblock =0;      /* Set to 1 to allow sigalrm to kill threads. */
 
 extern int DiagnosticMode; /* See manual on diagnostics */
 						   
-extern number_terminals;       /* The number of tracking terminals */
+extern int number_terminals;       /* The number of tracking terminals */
 extern FILE* screen_stream[];  /* The names of these screens */
 
 unsigned short  last_ha_enc,  last_dec_enc;  /* Save last encoder values */
@@ -200,7 +211,6 @@ void main(int argc, char *argv[])
 	pthread_attr_t thatTrack, thatScreen, thatStore, thatDiagnostic;
 	long *totask;
 	void **stat;
-	long tmp;
 
 	/*	setprio(getpid(),MAINPRIORITY);  */
 	/* First, grab shared memory */
@@ -274,7 +284,7 @@ void main(int argc, char *argv[])
 				/* Open the terminal file and add the name to the list */
 			screen_stream[number_terminals++] = fopen(argv[++i],"w");
 			printf("Opening port %s for tracking screen\n",argv[i]);
-			if (screen_stream[number_terminals-1] == NULL) {
+			if (screen_stream[number_terminals-1] == 0) {
 				number_terminals--;
 				printf("->Unable to open terminal %s\n",argv[i]);
 			}
@@ -316,28 +326,28 @@ void main(int argc, char *argv[])
 	tscreen_init();  /* Tracking screen initializations */
 
 	pthread_attr_init(&thatStore);
-	pthread_create( &thStore, &thatStore, (void *)do_store, NULL);
+	pthread_create( &thStore, &thatStore, (void *)do_store, 0);
 
 	pthread_attr_init(&thatScreen);
 	pthread_attr_setschedpolicy(&thatScreen, SCHED_OTHER);
 	/* I need to put in some scheduling priorityies here! */
-	pthread_create( &thScreen, &thatScreen, (void *)do_screens , NULL);
+	pthread_create( &thScreen, &thatScreen, (void *)do_screens , 0);
 
 	pthread_attr_init(&thatTrack);
 	pthread_attr_setschedpolicy(&thatTrack, SCHED_OTHER);
 	/* I need to put in some scheduling priorityies here! */
-	pthread_create( &thTrack, &thatTrack, (void *)trackloop , NULL);
+	pthread_create( &thTrack, &thatTrack, (void *)trackloop , 0);
 
 
-	if (DiagnosticMode != NULL)
+	if (DiagnosticMode != 0)
 	  {
 		pthread_attr_init(&thatDiagnostic);
 		pthread_create(&thDiagnostic, &thatDiagnostic, (void *)do_diagnostic, &totask);
 	  }
 	log_entry ( "track" );
-	pthread_join(thStore, &tmp );
-	pthread_join(thScreen,  &tmp );
-	pthread_join(thTrack,  &tmp); 
+	pthread_join(thStore, NULL );
+	pthread_join(thScreen, NULL );
+	pthread_join(thTrack,  NULL ); 
 
 	while(tinfo->keep_tracking != TRACK_STOP) { 
 		usleep( (unsigned long) 1000000);	  
@@ -429,7 +439,7 @@ void trackloop(void)
 		  /* NORMAL and PASSIVE observing modes:
 		     Track normally, optionally monitoring performance. */
 		  case PASSIVE_MODE:	
-		  case NULL:		
+		  case 0:		
 		  default:
 	
 			/* In temporary modification for Ames, */
@@ -653,7 +663,7 @@ void do_paddle(void ) {
 /* the encoders each pass through the tracking code.                     */
 /*************************************************************************/
 
-do_encoders()
+void do_encoders(void)
 {
 	int16 tmpgray;     /* Temporarily holds encoder gray code */
 	char msg[81];
@@ -790,7 +800,7 @@ void do_rates( void )
 
 	if (debug)  
 	  sprintf(USER_STR[3], "Errors: %8.1lf  %8.1lf", ha_err, dec_err); 
-	if (debugfile != NULL)
+	if (debugfile != 0)
 	  fprintf(debugfile, "%8.1lf  %8.1lf ", ha_err, dec_err); 
 
 /* NOTE:  This is a curve which has slope (MAX_SLEW_SPEED/HA_SERVO) at 
@@ -817,7 +827,7 @@ void do_rates( void )
 	  sprintf(USER_STR[2], "Cmds: %8d  %8d", 
 	  			tinfo ->ha_rate, tinfo ->dec_rate);
 	}
-	if (debugfile != NULL)
+	if (debugfile != 0)
 	  fprintf(debugfile, " %8.0f  %8.0f\n", ha_rt, dec_rt);
 }
 
@@ -1214,7 +1224,7 @@ void do_times( void )
 
 void tinfo_init( void )
 {
-	if (NULL == (core = fopen(CORE,"r+"	) )) {
+	if (0 == (core = fopen(CORE,"r+"	) )) {
 		printf("Unable to open corefile %s\n",CORE);
 		printf("How can this be? Disk full?\n");
 		printf("Altered directory structure? No permission?\n");
