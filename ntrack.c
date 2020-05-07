@@ -1068,6 +1068,14 @@ void run_dome( void )
 /* Read UT time from Clock                                             */
 /***********************************************************************/
 
+/* Copied from sys/time.h to avoid defining __USE_BSD */
+
+struct timezone
+  {
+    int tz_minuteswest;		/* Minutes west of GMT.  */
+    int tz_dsttime;		/* Nonzero if DST is ever in effect.  */
+  };
+
 void read_ut( )                     
 {
 

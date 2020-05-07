@@ -47,66 +47,66 @@ clean:
 ################
 
 test1.o: test1.c
-	cc -c   test1.c
+	gcc -c   test1.c
 
 test1: test1.o
-	cc -X -m   test1.o -o test1
+	gcc -X -m   test1.o -o test1
 
 testport.o: testport.c
-	cc -c -g testport.c
+	gcc -c -g testport.c
 testport: testport.o ../lib/openport.o
-	cc -X -m testport.o ../lib/openport.o -o testport
+	gcc -X -m testport.o ../lib/openport.o -o testport
 
 ###################
 # Utility routines objects 
 ###################
 times.o: times.c
-	cc -c  times.c
+	gcc -c  times.c
 get_tinfo.o: get_tinfo.c wiro.h wtrack.h
-	cc -c get_tinfo.c
+	gcc -c get_tinfo.c
 oblecl.o: oblecl.c wtrack.h
-	cc  -c oblecl.c
+	gcc  -c oblecl.c
 lonobl.o: lonobl.c wtrack.h
-	cc  -c lonobl.c
+	gcc  -c lonobl.c
 annabr.o : annabr.c wtrack.h
-	cc  -c  annabr.c
+	gcc  -c  annabr.c
 nutation.o: nutation.c wtrack.h
-	cc  -c  nutation.c
+	gcc  -c  nutation.c
 julian.o: julian.c wtrack.h
-	cc  -c  julian.c
+	gcc  -c  julian.c
 str2dec.o: str2dec.c
-	cc  -c  str2dec.c
+	gcc  -c  str2dec.c
 rem.o: rem.c
-	cc  -c  rem.c
+	gcc  -c  rem.c
 angles.o: angles.c 
-	cc  -c  angles.c
+	gcc  -c  angles.c
 hr_hms.o: hr_hms.c wtrack.h
-	cc  -c  hr_hms.c
+	gcc  -c  hr_hms.c
 track.o: track.c  GPIBports.h worm_corr.h wiro.h wtrack.h wirotypes.h \
 		parameters.h
-	cc  -c  track.c
+	gcc  -c  track.c
 ntrack.o: ntrack.c  GPIBports.h worm_corr.h wiro.h wtrack.h wirotypes.h \
 		parameters.h
-	cc  -c  ntrack.c
+	gcc  -c  ntrack.c
 diagnostic.o: diagnostic.c wiro.h parameters.h GPIBports.h wirotypes.h track.h\
 		wtrack.h
-	cc  -c  diagnostic.c
+	gcc  -c  diagnostic.c
 tscreen.o: tscreen.c wiro.h  wtrack.h
-	cc  -c tscreen.c
+	gcc  -c tscreen.c
 GPIBinit.o: GPIBinit.c GPIBports.h
-	cc  -g -c GPIBinit.c
+	gcc  -g -c GPIBinit.c
 GPIBports.o: GPIBports.c GPIBports.h wirotypes.h
-	cc  -g -c  GPIBports.c
+	gcc  -g -c  GPIBports.c
 
 
 track: ntrack.o GPIBports.o angles.o tscreen.o hr_hms.o rem.o \
 	openport.o times.o diagnostic.o get_tinfo.o $(LOG)
-#	cc -X -m -v track.o GPIBports.o angles.o tscreen.o hr_hms.o rem.o \
+#	gcc -X -m -v track.o GPIBports.o angles.o tscreen.o hr_hms.o rem.o \
 #		openport.o \
 #		/lib/thread/libgnu.a /lib/thread/init.o /lib/thread/libc_p.a \
 #		/lib/thread/libc.a   \
 #		-o track 
-	cc  ntrack.o GPIBports.o angles.o tscreen.o hr_hms.o rem.o \
+	gcc  ntrack.o GPIBports.o angles.o tscreen.o hr_hms.o rem.o \
 		openport.o times.o  diagnostic.o get_tinfo.o  $(LOG)\
 		-lm  -pthread -lc -o track 
 		chmod 711 track
@@ -114,29 +114,29 @@ track: ntrack.o GPIBports.o angles.o tscreen.o hr_hms.o rem.o \
 
 #######################################################
 follow.o: follow.c wiro.h
-	cc  -c follow.c
+	gcc  -c follow.c
 follow: follow.o str2dec.o $(LOG)
-	cc follow.o str2dec.o get_tinfo.o $(LOG) -o follow -lm
+	gcc follow.o str2dec.o get_tinfo.o $(LOG) -o follow -lm
 	chmod 711 follow
 	chmod +s follow
 #######################################################
 pcat.o: pcat.c wiro.h
-	cc -c  pcat.c 
+	gcc -c  pcat.c 
 pcat: pcat.o str2dec.o
-	cc  pcat.o str2dec.o get_tinfo.o -lm -o pcat 
+	gcc  pcat.o str2dec.o get_tinfo.o -lm -o pcat 
 
 #######################################################
 
 tstatus.o: tstatus.c wiro.h wirotypes.h
-	cc -c tstatus.c
+	gcc -c tstatus.c
 tstatus: tstatus.o get_tinfo.o
-	cc tstatus.o get_tinfo.o -lm -o tstatus
+	gcc tstatus.o get_tinfo.o -lm -o tstatus
 
 #######################################################
 stop.o: stop.c wiro.h
-	cc -c -g stop.c
+	gcc -c -g stop.c
 stop: stop.o $(LOG)
-	cc  stop.o get_tinfo.o $(LOG) -o stop 
+	gcc  stop.o get_tinfo.o $(LOG) -o stop 
 	chmod 711 stop
 	chmod +s stop
 s: stop
@@ -162,18 +162,18 @@ quit: stop
 
 #######################################################
 dome.o : dome.c wiro.h
-	cc -c dome.c
+	gcc -c dome.c
 dome: dome.o $(LOG)
-	cc  dome.o  get_tinfo.o $(LOG) -o dome
+	gcc  dome.o  get_tinfo.o $(LOG) -o dome
 	chmod 711 dome
 	chmod +s dome
 
 
 #######################################################
 offsets.o : offsets.c wiro.h
-	cc  -c offsets.c
+	gcc  -c offsets.c
 offsets: offsets.o $(LOG)
-	cc  offsets.o get_tinfo.o $(LOG) -o offsets
+	gcc  offsets.o get_tinfo.o $(LOG) -o offsets
 	chmod 1711 offsets
 	chmod +s offsets
 nn: offsets
@@ -201,9 +201,9 @@ setdial: offsets
 
 #######################################################
 fixed.o : fixed.c wiro.h
-	cc  -c fixed.c
+	gcc  -c fixed.c
 fixed: fixed.o $(LOG)
-	cc fixed.o get_tinfo.o $(LOG) -o fixed 
+	gcc fixed.o get_tinfo.o $(LOG) -o fixed 
 	chmod 711 fixed
 	chmod +s fixed
 zenith: fixed 
@@ -214,17 +214,17 @@ service: fixed
 
 #######################################################
 dialing.o : dialing.c wiro.h
-	cc -c dialing.c
+	gcc -c dialing.c
 dialing: dialing.o $(LOG)
-	cc dialing.o get_tinfo.o $(LOG) -lm  -o dialing 
+	gcc dialing.o get_tinfo.o $(LOG) -lm  -o dialing 
 	chmod 711 dialing
 	chmod +s dialing
 
 #######################################################
 catalog.o: catalog.c wiro.h
-	cc -c -g  catalog.c
+	gcc -c -g  catalog.c
 catalog: catalog.o $(LOG)
-	cc catalog.o $(LOG) -g -lm -o catalog 
+	gcc catalog.o $(LOG) -g -lm -o catalog 
 	chmod 711 catalog
 	chmod +s catalog
 newobject: catalog
@@ -232,57 +232,57 @@ newobject: catalog
 
 #######################################################
 keypad.o: keypad.c wiro.h wirotypes.h
-	cc -c  keypad.c
+	gcc -c  keypad.c
 keypad: keypad.o $(LOG)
-	cc  keypad.o get_tinfo.o $(LOG) -lm  -o keypad 
+	gcc  keypad.o get_tinfo.o $(LOG) -lm  -o keypad 
 	chmod 711 keypad
 	chmod +s keypad
 #######################################################
 pad: pad.o get_tinfo.o $(LOG)
-	cc  -g -o pad pad.o get_tinfo.o $(LOG) -lslang
+	gcc  -g -o pad pad.o get_tinfo.o $(LOG) -lslang
 	chmod 711 pad
 	chmod +s pad
 
 pad.o: pad.c wiro.h wirotypes.h
-	cc -g -c  pad.c
+	gcc -g -c  pad.c
 
 
 slecho: slecho.c
-	cc -o slecho slecho.c -lslang
+	gcc -o slecho slecho.c -lslang
 #######################################################
 setfocus: setfocus.o get_tinfo.o $(LOG)
-	cc  -g -o setfocus setfocus.o get_tinfo.o $(LOG) -lslang
+	gcc  -g -o setfocus setfocus.o get_tinfo.o $(LOG) -lslang
 	chmod 711 setfocus
 	chmod +s setfocus
 
 setfocus.o: setfocus.c wiro.h wirotypes.h
-	cc -g -c  setfocus.c
+	gcc -g -c  setfocus.c
 
 #######################################################
 setnod: setnod.o get_tinfo.o $(LOG)
-	cc -o setnod setnod.o get_tinfo.o $(LOG)
+	gcc -o setnod setnod.o get_tinfo.o $(LOG)
 	chmod 711 setnod
 	chmod +s setnod
 
 setnod.o: setnod.c wiro.h wirotypes.h
-	cc -c setnod.c
+	gcc -c setnod.c
 
 #######################################################
 nod: nod.o get_tinfo.o $(LOG)
-	cc  -o nod nod.o get_tinfo.o $(LOG) 
+	gcc  -o nod nod.o get_tinfo.o $(LOG) 
 	chmod 711 nod
 	chmod +s nod
 
 nod.o: nod.c wiro.h wirotypes.h
-	cc -c nod.c
+	gcc -c nod.c
 
 #######################################################
 spiral: spiral.o get_tinfo.o $(LOG)
-	cc  -o spiral spiral.o get_tinfo.o $(LOG) -lslang
+	gcc  -o spiral spiral.o get_tinfo.o $(LOG) -lslang
 	chmod 711 spiral
 	chmod +s spiral
 spiral.o: spiral.c wiro.h
-	cc -c  spiral.c
+	gcc -c  spiral.c
 
 #######################################################
 rate.o: rate.c wiro.h wirotypes.h
