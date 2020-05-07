@@ -1,0 +1,1 @@
+cmd_/home/observer/ik-220/ik220.ko.unsigned := ld -r -m elf_i386 -T /usr/src/kernels/2.6.32-754.27.1.el6.i686/scripts/module-common.lds --build-id -o /home/observer/ik-220/ik220.ko.unsigned /home/observer/ik-220/ik220.o /home/observer/ik-220/ik220.mod.o 

@@ -1,0 +1,146 @@
+DR. JOHANNES HEIDENHAIN GmbH
+
+IK 220 Linux Treiber
+====================
+
+
+
+1. Inhalt
+---------
+
+Der Linux Treiber wird als tar.gz File geliefert und beinhaltet folgende Dateien:
+
+ik220.c			IK220 LinuxTreiber C-Quellcode
+ik220.h			IK220 LinuxTreiber Headerdatei
+ik220_if.h		IK220 LinuxTreiber Headerdatei [IOCTL]
+Pgm220.h		Firmware der IK220 Hardware
+
+ik220.o			Kompiliertes Kernelmodul
+
+
+ik220_lib.c		IK220 Funktionsbibliothek Quellcodedatei
+ik220_lib.h		IK220 Funktionsbibliothek Headerdatei
+
+
+ik220con		Konsolenprogramm Ansteuerung für EnDat Geräte
+IK220Con.c		Quellcode zum Konsolenprogramm Ansteuerung für EnDat Geräte
+IK220Con.h		Headerdatei zum Konsolenprogramm Ansteuerung für EnDat Geräte
+
+ik220_read48		Konsolenprogramm Ansteuerung 11uAss Geräte über READ48 Methode
+IK220_read48.c		Quellcode zum Konsolenprogramm Ansteuerung 11uAss Geräte über READ48 Methode
+
+
+compile.sh		Script zur Erstellung des Kernelmoduls und der Beispielprogramme
+
+
+Beschreibung.txt	Diese Datei
+
+
+
+2. Installation
+---------------
+
+Der Treiber wurde für die Kernelversion 2.4 erstellt und auf Debian "unstable" (OKT 04) getestet.
+
+Melden Sie sich als root an und führen Sie "./compile.sh" aus.
+Hier werden nun alle Module compiliert. Als Ergebnis erhalten sie die Datei "ik220.o"
+
+Laden Sie den Treiber nun in den Kernel: "insmod ik220.o". 
+
+Dabei sollten Sie die Systemmessages beobachten: "tail -f /var/log/messages"
+
+Jetzt müssen Sie noch den Treiber ins Dev-Dateisystem einbinden "mknod /dev/ik220 c 61 0"
+Somit steht der Treiber dem System zur Verfügung!
+
+Starten Sie nun das Konsolenprogramm: "./ik220_read48"
+Als Ergebnis erhalten Sie einige Statusangaben zur IK220 und den Zählwert der Achse 0.
+
+
+
+3. Bibliotheksinhalt
+--------------------
+
+IK220Find	Installierte IK220 feststellen und Adressen vergeben
+IK220Init	IK220 initialisieren und Firmware downloaden
+IK220Version	Programm-Version lesen
+IK220Reset	Zaehler loeschen
+IK220Start	Zaehler starten
+IK220Stop	Zaehler stoppen
+IK220ClearErr	Frequenz und Amplitudenfehler loeschen
+IK220Latch	Zaehlerwert im Register speichern
+IK220ResetRef	Zaehler loeschen bei naechster Referenzmarke
+IK220StartRef	Zaehler starten bei naechster Referenzmarke
+IK220StopRef	Zaehler stoppen bei naechster Referenzmarke
+IK220LatchRef	Zaehler speichern bei naechster Referenzmarke
+IK220Read32	Zaehlwert lesen (32 Bit)
+IK220Read48	Zaehlwert lesen (48 Bit)
+IK220DoRef	Referenzpunkt-Fahren starten
+IK220CancelRef	Referenzpunkt-Fahren abbrechen
+IK220WritePar	Parameter schreiben
+IK220ResetEn	Reset EnDat Messgeraet
+IK220ConfigEn	Konfiguration des EnDat-Gebers
+IK220ReadEn	Absoluten Zaehlwert des EnDat Gebers lesen
+IK220ModeRam	Konfiguration des Rambausteins
+IK220BurstRam	Schnelles auslesen aus dem Puffer
+IK220LatchInt	Erzeugen des internen Speicherimpulses
+IK220LatchExt	Erzeugen des externen Speicherimpulses
+IK220ModeTimer	Parametriertung des Timersignales
+
+
+
+4. History
+----------
+
+04.10.2004	V0.10	Erstveroeffentlichung
+			Grundfunktionen werden zur Verfuegung gestellt
+			compile.sh erstellt
+			
+13.05.2005	V0.20	Neue IK 220 Firmware
+			Neue Funktionen	IK220ModeRam
+					IK220BurstRam
+					IK220LatchInt
+					IK220LatchExt
+					IK220ModeTimer
+					
+
+5. Lizenzbestimmungen
+---------------------
+
+DIES IST EXPERIMENTELLE SOFTWARE. DIE BENUTZUNG ERFOLGT AUF EIGENE GEFAHR. 
+DIE DR. JOHANNES HEIDENHAIN GMBH KANN UNTER KEINEN UMSTÄNDEN HAFTBAR GEMACHT 
+WERDEN FÜR SCHÄDEN AN HARD- UND SOFTWARE, VERLORENE DATEN UND ANDERE DIREKT 
+ODER INDIREKT DURCH DIE BENUTZUNG DER SOFTWARE ENTSTEHENDE SCHÄDEN. WENN SIE 
+MIT DIESEN KONDITIONEN NICHT EINVERSTANDEN SIND, DÜRFEN SIE DIE SOFTWARE NICHT
+VERWENDEN ODER WEITERGEBEN. DIE SOFTWARE UND DER QUELLCODE DUERFEN VERÄNDERT
+UND ERWEITERT WERDEN. EINE KOMMERZIELLE VERMARKTUNG UND VERBREITUNG IST GESTATTET.
+
+DIE SOFTWARE DARF NUR AN DRITTE WEITERGEGEBEN WERDEN; WENN DIESE DRITTEN 
+PERSONEN ZUVOR EINEN HAFTUNGSAUSSCHULUSS MIT DER DR. JOHANNES HEIDENHAIN GMBH
+UNTERZEICHNET HABEN. SOLLTE DIE SOFTWARE OHNE DIESEN HAFTUNGSAUSSCHLUSS AN
+DRITTE WEITERGEGEBEN WERDEN, STELLT SIE DIE DR. JOHANNES HEIDENHAIN GMBH VON
+ETWAIGEN ENTSTEHENDEN SCHAEDEN FREI, DIE DIESE DRITTEN GEGEN DIE
+DR. JOHANNES HEIDENHAIN GMBH GELTEND MACHEN.
+
+
+6. Unterstützung und SUPPORT
+----------------------------
+
+Wie in den Lizenzbestimmungen beschrieben ist dieser Treiber als Beispiel zu 
+betrachten. Wir unterstützen Sie aber gerne bei der Inbetriebnahme und 
+Implementierung Ihrer Lösung.
+
+
+HEIDENHAIN
+------------------------------------------
+DR. JOHANNES HEIDENHAIN GmbH
+Dr.-Johannes-Heidenhain-Straße 5
+83301 Traunreut, Germany
+
+tel +49(8669)31-0
+e-mail: info@heidenhain.de
+------------------------------------------
+Measuring systems (IK220 Support)
+tel 	+49(8669)31-3104
+e-mail	service.ms-support@heidenhain.de
+------------------------------------------
+www.heidenhain.de

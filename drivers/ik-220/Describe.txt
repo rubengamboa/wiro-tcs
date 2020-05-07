@@ -1,0 +1,144 @@
+DR. JOHANNES HEIDENHAIN GmbH
+
+IK 220 Linux Driver
+===================
+
+
+
+1. Contents
+---------
+
+The Linux driver is provided as tar.gz file and comprises the following files:
+
+ik220.c		IK220 Linux driver C source code
+ik220.h		IK220 Linux driver header file
+ik220_if.h	IK220 Linux driver header file [IOCTL]
+Pgm220.h	Firmware of the IK220 hardware
+
+ik220.o		Compiled kernel module
+
+
+ik220_lib.c	IK220 Functions library, source-code file
+ik220_lib.h	IK220 Functions library, header file
+
+
+ik220con	Console program to control EnDat units
+IK220Con.c	Source code of the console program to control EnDat units
+IK220Con.h	Header file of the console program to control EnDat units
+
+ik220_read48	Console program to control 11 µApp units via READ48 
+IK220_read48.c	Source code of the console program to control 11 µApp units via READ48 
+
+
+compile.sh	Script for creating the kernel module and the program examples
+
+
+Describe.txt	This file
+
+
+
+2. Installation
+---------------
+
+The driver was created for the kernel version 2.4 and tested for Debian "unstable" (APR 05).
+
+Log on as root and run "./compile.sh".
+All module are compiled now. As a result you obtain the file "ik220.o".
+
+Now load the driver into the kernel: "insmod ik220.o". 
+
+When doing so observe the messages in the log:  "tail -f /var/log/messages"
+
+Afterwards you need to load the driver into the Dev file system: "mknod /dev/ik220 c 61 0"
+Now the driver is available to the system!
+
+Start your console program: "./ik220_read48"
+You will receive some status information on IK220 and the current count of the 0 axis.
+
+
+
+3. Library contents
+-------------------
+
+IK220Find	Find installed IK220 and assign addresses
+IK220Init	Initialize IK220 and download firmware
+IK220Version	Read program version
+IK220Reset	Reset counter
+IK220Start	Start counter
+IK220Stop	Stop counter
+IK220ClearErr	Clear frequency and amplitude errors
+IK220Latch	Latch current count
+IK220ResetRef	Reset counter on next reference mark
+IK220StartRef	Start counter on next reference mark
+IK220StopRef	Stop counter on next reference mark
+IK220LatchRef	Latch counter on next reference mark
+IK220Read32	Read current count (32 bits)
+IK220Read48	Read current count (48 bits)
+IK220DoRef	Start reference mark traverse
+IK220CancelRef	Cancel reference mark traverse
+IK220WritePar	Write parameter
+IK220ResetEn	Reset EnDat encoder
+IK220ConfigEn	Configuration of EnDat encoder
+IK220ReadEn	Read absolute value of EnDat encoder
+IK220ModeRam	Stored counter values can be transferred to a buffer.
+IK220BurstRam	Counter values previously stored in the RAM buffer are output.
+IK220LatchInt	Generates a signal for Latch 0.
+IK220LatchExt	Generates a signal for extern using.
+IK220ModeTimer	Specifies whether the timer signal is output.
+ 
+
+4. History
+----------
+
+04.10.2004	V0.10	First release
+			Basic functions are available
+			compile.sh created
+
+13.04.2005	V0.20	New IK220 Firmware
+			New Functions	IK220ModeRam
+				    	IK220BurstRam
+					IK220LatchInt
+					IK220LatchExt
+					IK220ModeTimer		
+
+
+5. Licensing conditions
+-----------------------
+
+This is experimental software. The use of this software is at your own risk. 
+Under no circumstances shall DR. JOHANNES HEIDENHAIN GmbH be liable for damage 
+to hardware and software, for data loss and other damage directly or indirectly 
+caused by using this software. If you do not agree with these conditions, you 
+must not use or pass on the software. The software and its source code may be 
+edited and expanded. Commercial distribution is permitted.
+
+The software may only given to a third party after this party has signed the 
+exemption from liability of DR. JOHANNES HEIDENHAIN GmbH. If the software is 
+given to a third party without exemption from liability, DR. JOHANNES HEIDENHAIN GmbH 
+shall not be liable for any claims the third party may assert against 
+DR. JOHANNES HEIDENHAIN GmbH.
+
+
+6. Support
+----------
+
+As described in the licensing agreement, this driver is to be considered as 
+an example. If you require support in implementing your solution, we will
+be glad to assist you.
+
+
+HEIDENHAIN
+------------------------------------------
+DR. JOHANNES HEIDENHAIN GmbH
+Dr.-Johannes-Heidenhain-Straﬂe 5
+83301 Traunreut, Germany
+
+Phone: +49(8669)31-0
+e-mail: info@heidenhain.de
+------------------------------------------
+Measuring systems (IK220 Support)
+Phone:	+49(8669)31-3104
+e-mail	service.ms-support@heidenhain.de
+------------------------------------------
+www.heidenhain.de
+
